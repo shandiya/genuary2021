@@ -1,7 +1,9 @@
+# load libraries
 library(tidyverse)
 library(viridis)
 library(here)
 
+# set up dataframe
 df <- data.frame(
   x = 1:100,
   y = c(
@@ -18,6 +20,7 @@ df <- data.frame(
   group = 1:100
 )
 
+# 19: Increase the randomness along the Y-axis
 ggplot(df) +
   geom_line(aes(x = x, y = y),
             colour = "#666666") +
@@ -27,7 +30,7 @@ ggplot(df) +
   theme(plot.caption = element_text(color = "#aaaaaa", size = 7)) +
   ggsave(here("plots", "genuary_19.png"), width = 8, height = 5, units = "in")
 
-
+# 17: Draw a line, pick a new color, move a bit.
 ggplot(df) +
   geom_line(aes(x = x, y = y, colour = group)) +
   scale_colour_viridis(option = "inferno") +
@@ -37,7 +40,4 @@ ggplot(df) +
   theme(
     plot.caption = element_text(color = "#aaaaaa", size = 7),
     legend.position = "none") +
-  ggsave(here("plots", "genuary_17.png"), width = 8, height = 5, units = "in") 
-   
-
-
+  ggsave(here("plots", "genuary_17.png"), width = 8, height = 5, units = "in")   

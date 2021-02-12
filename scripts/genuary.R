@@ -5,6 +5,7 @@ library(viridis)
 library(here)
 library(palmerpenguins)
 library(feather)
+library(tuneR)
 
 
 # 16: Circles only---------------------
@@ -92,6 +93,7 @@ ggplot(df_24) +
     plot.background = element_rect(fill = "lightblue", colour = "lightblue")) +
   ggsave(here("plots", "genuary_24.png"), height = 4, width = 4, units = "in")
 
+
 # 25: Make a grid of permutations of something-----------------
 # permutations in pink
 
@@ -110,19 +112,56 @@ ggplot(df_shuffled, aes(x, y, alpha = alpha)) +
   theme(legend.position = "none") +
   ggsave(here("plots", "genuary_25.png"), width = 4, height = 4, units = "in")
 
-# attempt at animation (incomplete)
-# 
-# library(gganimate)
-# library(gifski)
-# 
-# p <- ggplot(df_shuffled, aes(x, y, alpha = alpha)) +
-#   geom_tile(fill = rgb(0.9,0.5,0.9), colour = "white") +
-#   theme_void() +
-#   theme(legend.position = "none")
-# 
-# anim <- p + transition_states(alpha, transition_length = 3, state_length = 1) 
-# animate(anim, duration = 5, fps = 20, width = 400, height = 400, renderer = gifski_renderer())
-# anim_save("output.gif")
+
+# 28: Use sound-----------------------
+
+# read in file, wrangle df
+c_tibicen <- readMidi(here("data", "c_tibicen.mid"))
+c_tibicen_notes <- c_tibicen %>% 
+  getMidiNotes() %>% 
+  mutate(notename_abbr = str_sub(notename, 1, 1))
+
+# plot!
+ggplot(c_tibicen_notes) +
+  geom_point(aes(
+    x = time,
+    y = note,
+    size = length,
+    alpha = velocity,
+    colour = notename_abbr),
+  shape = 16) +
+  ylim((min(c_tibicen_notes$note) - 8), max(c_tibicen_notes$note)) +
+  scale_size(range = c(3, 10)) +
+  scale_alpha(range = c(0.4, 0.9)) +
+  scale_color_manual(values = c(
+    "#2AA09A",
+    "#9BD7D7",
+    "#3B643F",
+    "#8C9E5A",
+    "#DBA62D",
+    "#F7C9BD",
+    "#C12B38")) +
+  annotate(
+    "text", 
+    x = 600, 
+    y = 69, 
+    label = "Australian \nmagpie", 
+    size = 5, 
+    fontface = "bold",
+    colour = "#777777") +
+  coord_polar() +
+  theme_void() +
+  labs(caption = "Shandiya Balasubramaniam | @ShandiyaB") +
+  theme(
+    plot.caption = element_text(size = 8, colour = "#555555"),
+    legend.position = "none") +
+  ggsave(here("plots", "genuary_28.png"), width = 6, height = 6, units = "in")
+  
+
+  
+  
+
+
 
 
 

@@ -6,6 +6,7 @@ library(here)
 library(palmerpenguins)
 library(feather)
 library(tuneR)
+library(patchwork)
 
 
 # 16: Circles only---------------------
@@ -13,7 +14,7 @@ library(tuneR)
 oriole <- get_pal("oriole")
 colours <- oriole[c(3, 6, 4, 5, 2)]
 
-ggplot(penguins) +
+p16 <- ggplot(penguins) +
   geom_point(
     aes(
       x = flipper_length_mm,
@@ -32,9 +33,9 @@ ggplot(penguins) +
   theme_void() +
   theme(
     legend.position = "none",
-    plot.background = element_rect(fill = "black", colour = "black")
-  ) +
-  ggsave(here("plots", "genuary_16.png"), height = 3, width = 3, units = "in")
+    plot.background = element_rect(fill = "black", colour = "black"))
+
+p16 + ggsave(here("plots", "genuary_16.png"), height = 2, width = 2, units = "in")
 
 
 # 17: Draw a line, pick a new color, move a bit---------------------
@@ -55,28 +56,30 @@ df_17 <- data.frame(
   group = 1:100
 )
 
-ggplot(df_17) +
+p17 <- ggplot(df_17) +
   geom_line(aes(x = x, y = y, colour = group)) +
   scale_colour_viridis(option = "inferno") +
   coord_flip() +
   theme_void() +
-  labs(caption = "Shandiya Balasubramaniam | @ShandiyaB") +
+  #labs(caption = "Shandiya Balasubramaniam | @ShandiyaB") +
   theme(
     plot.caption = element_text(color = "#aaaaaa", size = 7),
-    legend.position = "none") +
-  ggsave(here("plots", "genuary_17.png"), width = 8, height = 5, units = "in")   
+    legend.position = "none") 
+
+p17 + ggsave(here("plots", "genuary_17.png"), width = 2, height = 2, units = "in")   
 
 
 # 19: Increase the randomness along the Y-axis---------------------
 
-ggplot(df_17) +
+p19 <- ggplot(df_17) +
   geom_line(aes(x = x, y = y),
             colour = "#666666") +
   coord_flip() +
   theme_void() +
-  labs(caption = "Shandiya Balasubramaniam | @ShandiyaB") +
-  theme(plot.caption = element_text(color = "#aaaaaa", size = 7)) +
-  ggsave(here("plots", "genuary_19.png"), width = 8, height = 5, units = "in")
+  #labs(caption = "Shandiya Balasubramaniam | @ShandiyaB") +
+  theme(plot.caption = element_text(color = "#aaaaaa", size = 7))
+
+p19 + ggsave(here("plots", "genuary_19.png"), width = 2, height = 2, units = "in")
 
 
 # 24: 500 lines-------------------------
@@ -84,14 +87,15 @@ ggplot(df_17) +
 
 df_24 <- data.frame(x = sample(500), y = sample(500), group = 1:20)
 
-ggplot(df_24) +
+p24 <- ggplot(df_24) +
   geom_curve(aes(x = x, xend = x + 8, y = y, yend = y + 4, colour = group)) +
   scale_colour_gradient(low = "darkolivegreen1", high = "darkolivegreen4") +
   theme_void() +
   theme(
     legend.position = "none",
-    plot.background = element_rect(fill = "lightblue", colour = "lightblue")) +
-  ggsave(here("plots", "genuary_24.png"), height = 4, width = 4, units = "in")
+    plot.background = element_rect(fill = "lightblue", colour = "lightblue")) 
+
+p24 + ggsave(here("plots", "genuary_24.png"), height = 2, width = 2, units = "in")
 
 
 # 25: Make a grid of permutations of something-----------------
@@ -106,11 +110,12 @@ df_shuffled <- df_25[rows, ]
 binom <- rbinom(25, 20, 0.2)
 df_shuffled$alpha <- binom/10
 
-ggplot(df_shuffled, aes(x, y, alpha = alpha)) +
+p25 <- ggplot(df_shuffled, aes(x, y, alpha = alpha)) +
   geom_tile(fill = rgb(0.9,0.5,0.9), colour = "white") +
   theme_void() +
-  theme(legend.position = "none") +
-  ggsave(here("plots", "genuary_25.png"), width = 4, height = 4, units = "in")
+  theme(legend.position = "none") 
+
+p25 + ggsave(here("plots", "genuary_25.png"), width = 2, height = 2, units = "in")
 
 
 # 28: Use sound-----------------------
@@ -122,7 +127,7 @@ c_tibicen_notes <- c_tibicen %>%
   mutate(notename_abbr = str_sub(notename, 1, 1))
 
 # plot!
-ggplot(c_tibicen_notes) +
+p28 <- ggplot(c_tibicen_notes) +
   geom_point(aes(
     x = time,
     y = note,
@@ -154,11 +159,15 @@ ggplot(c_tibicen_notes) +
   labs(caption = "Shandiya Balasubramaniam | @ShandiyaB") +
   theme(
     plot.caption = element_text(size = 8, colour = "#555555"),
-    legend.position = "none") +
-  ggsave(here("plots", "genuary_28.png"), width = 6, height = 6, units = "in")
+    legend.position = "none") 
+
+p28 + ggsave(here("plots", "genuary_28.png"), width = 5, height = 5, units = "in")
   
 
-  
+# combine all plots------------
+
+all_plots <- (p25 + p28 + p24) / (p17 + p16 + p19)
+ggsave('plots/all_plots.png', all_plots, width = 12, height = 8, units  = "in")  
   
 
 

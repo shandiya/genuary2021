@@ -4,7 +4,7 @@ library(tidyverse)
 library(viridis)
 library(here)
 library(palmerpenguins)
-library(feather)
+library(feathers)
 library(tuneR)
 library(patchwork)
 
@@ -169,8 +169,3 @@ p28 + ggsave(here("plots", "genuary_28.png"), width = 5, height = 5, units = "in
 all_plots <- (p25 + p28 + p24) / (p17 + p16 + p19)
 ggsave('plots/all_plots.png', all_plots, width = 12, height = 8, units  = "in")  
   
-
-
-
-
-
